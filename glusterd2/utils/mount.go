@@ -38,8 +38,9 @@ func MountLocalBricks() error {
 
 	for _, v := range volumes {
 		for _, b := range v.GetLocalBricks() {
-			// Mount all local Bricks if they are auto provisioned
-			if b.MountInfo.DevicePath != "" {
+			// Mount all local Bricks if they are auto provisioned or inheritted via snapshot creation
+			provisionType := b.ProvisionType
+			if provisionType.IsAutoProvisioned() || provisionType.IsSnapshotProvisioned() {
 				mountRoot := strings.TrimSuffix(b.Path, b.MountInfo.Mountdir)
 				if _, exists := mounts[mountRoot]; exists {
 					continue

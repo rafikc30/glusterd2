@@ -9,6 +9,7 @@ import (
 	"github.com/gluster/glusterd2/glusterd2/volume"
 	"github.com/gluster/glusterd2/pkg/api"
 	"github.com/gluster/glusterd2/pkg/testutils"
+	"github.com/gluster/glusterd2/pkg/utils"
 
 	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
@@ -37,7 +38,7 @@ func TestCreateVolinfo(t *testing.T) {
 	assert.NotNil(t, vol)
 
 	// Mock failure in NewBrickEntries(), createVolume() should fail
-	defer testutils.Patch(&volume.NewBrickEntriesFunc, func(bricks []api.BrickReq, volName, volfileID string, volID uuid.UUID) ([]brick.Brickinfo, error) {
+	defer testutils.Patch(&volume.NewBrickEntriesFunc, func(bricks []api.BrickReq, volName, volfileID string, volID uuid.UUID, pT utils.ProvisionState) ([]brick.Brickinfo, error) {
 		return nil, errBad
 	}).Restore()
 	_, e = newVolinfo(msg)
